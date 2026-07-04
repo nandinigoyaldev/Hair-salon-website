@@ -2,8 +2,8 @@ const sqlite3 = require('sqlite3').verbose();
 const bcrypt = require('bcryptjs');
 const path = require('path');
 
-// Store the SQLite database file in the src/ folder or custom env path
-const dbPath = process.env.DATABASE_PATH || path.join(__dirname, 'bookings.db');
+// Store the SQLite database file in a writable directory
+const dbPath = process.env.DATABASE_PATH || (process.env.RENDER ? '/tmp/bookings.db' : path.join(__dirname, 'bookings.db'));
 const db = new sqlite3.Database(dbPath, (err) => {
     if (err) {
         console.error('Error connecting to SQLite database:', err.message);
