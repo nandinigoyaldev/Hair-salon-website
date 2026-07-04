@@ -666,12 +666,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Before/After comparison slider modal logic
     const portfolioModal = document.getElementById("portfolio-modal");
-    const viewPortfolioBtns = document.querySelectorAll(".view-portfolio-btn");
-    const closePortfolioModalSpan = document.querySelector(".close-portfolio-modal");
     const sliderDivider = document.getElementById("slider-divider-range");
     const sliderBeforeImg = document.getElementById("slider-before-img");
     const sliderAfterImg = document.getElementById("slider-after-img");
     const portfolioTitle = document.getElementById("portfolio-title");
+    const closePortfolioModalSpan = document.querySelector(".close-portfolio-modal");
 
     // Pre-configured before/after works for stylists (using assets already in the repo)
     const portfolios = {
@@ -686,29 +685,6 @@ document.addEventListener("DOMContentLoaded", () => {
             after: "assets/images/hair1.jpg"
         }
     };
-
-    if (viewPortfolioBtns.length > 0 && portfolioModal) {
-        viewPortfolioBtns.forEach(btn => {
-            btn.addEventListener("click", () => {
-                const stylistKey = btn.dataset.stylist;
-                const config = portfolios[stylistKey];
-                
-                if (config) {
-                    portfolioTitle.textContent = config.title;
-                    sliderBeforeImg.src = config.before;
-                    sliderAfterImg.src = config.after;
-                    
-                    // Reset divider range position to 50%
-                    if (sliderDivider) {
-                        sliderDivider.value = 50;
-                        sliderDivider.dispatchEvent(new Event('input'));
-                    }
-                    
-                    portfolioModal.style.display = "block";
-                }
-            });
-        });
-    }
 
     if (closePortfolioModalSpan) {
         closePortfolioModalSpan.addEventListener("click", () => {
@@ -938,7 +914,145 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // ==========================================
+    // DYNAMIC STYLISTS TEAM & CAROUSEL LOGIC
+    // ==========================================
+    const teamGrid = document.querySelector(".team-grid");
+    let currentTeamIndex = 0;
+
+    async function loadTeam() {
+        if (!teamGrid) return;
+        teamGrid.innerHTML = '<p style="text-align: center; color: #888; width: 100%;">Loading stylists...</p>';
+        
+        try {
+            const res = await fetch("/api/stylists");
+            const stylists = await res.json();
+            
+            teamGrid.innerHTML = "";
+            
+            if (stylists.length === 0) {
+                teamGrid.innerHTML = '<p style="text-align: center; color: #888; width: 100%;">No stylists in registry.</p>';
+                return;
+            }
+
+            stylists.forEach(stylist => {
+                const card = document.createElement("div");
+                card.className = "team-card";
+                
+                // Fallback bio based on specialty
+                const bio = stylist.specialty.toLowerCase().includes("color") 
+                    ? "Specialist in organic hand-painted balayage, vivid pastels, and premium damage-free highlights."
+                    : "Expertise in precision geometric cuts, luxury blowouts, and custom texturing treatments.";
+                
+                card.innerHTML = `
+                    <div class="team-image-wrapper">
+                        <img src="${stylist.image_url}" alt="${stylist.name} - ${stylist.specialty}" loading="lazy">
+                    </div>
+                    <div class="team-info">
+                        <h3>${stylist.name}</h3>
+                        <p class="specialty">${stylist.specialty}</p>
+                        <p class="stylist-bio">${bio}</p>
+                        <div class="team-social">
+                            <a href="#" class="team-social-btn" aria-label="Instagram">Instagram</a>
+                            <a href="#" class="team-social-btn" aria-label="Pinterest">Pinterest</a>
+                        </div>
+                        <button type="button" class="view-portfolio-btn" data-stylist="${stylist.name.toLowerCase()}">View Transformations</button>
+                    </div>
+                `;
+                teamGrid.appendChild(card);
+            });
+
+            // Bind click event on new View Portfolio buttons
+            bindPortfolioButtons();
+
+            // Configure team carousel
+            initTeamCarousel(stylists.length);
+
+        } catch (err) {
+            console.error("Error loading team stylists:", err);
+            teamGrid.innerHTML = '<p style="text-align: center; color: #ff5555; width: 100%;">Failed to load stylists.</p>';
+        }
+    }
+
+    function bindPortfolioButtons() {
+        const viewPortfolioBtns = document.querySelectorAll(".view-portfolio-btn");
+        const portfolioModal = document.getElementById("portfolio-modal");
+        const sliderBeforeImg = document.getElementById("slider-before-img");
+        const sliderAfterImg = document.getElementById("slider-after-img");
+        const portfolioTitle = document.getElementById("portfolio-title");
+        const sliderDivider = document.getElementById("slider-divider-range");
+
+        if (viewPortfolioBtns.length > 0 && portfolioModal) {
+            viewPortfolioBtns.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const stylistKey = btn.dataset.stylist;
+                    
+                    const config = portfolios[stylistKey] || {
+                        title: `${btn.parentNode.querySelector("h3").textContent}'s Work: Professional Styling`,
+                        before: "assets/images/hair2.jpeg",
+                        after: "assets/images/hair1.jpg"
+                    };
+                    
+                    portfolioTitle.textContent = config.title;
+                    sliderBeforeImg.src = config.before;
+                    sliderAfterImg.src = config.after;
+                    
+                    if (sliderDivider) {
+                        sliderDivider.value = 50;
+                        sliderDivider.dispatchEvent(new Event('input'));
+                    }
+                    
+                    portfolioModal.style.display = "block";
+                });
+            });
+        }
+    }
+
+    function initTeamCarousel(count) {
+        const carouselWrapper = document.querySelector(".team-carousel-wrapper");
+        const teamPrevBtn = document.getElementById("team-prev-btn");
+        const teamNextBtn = document.getElementById("team-next-btn");
+        
+        if (!carouselWrapper || !teamGrid) return;
+
+        currentTeamIndex = 0;
+        teamGrid.style.transform = "translateX(0)";
+
+        if (count <= 3 || window.innerWidth <= 768) {
+            if (teamPrevBtn) teamPrevBtn.style.display = "none";
+            if (teamNextBtn) teamNextBtn.style.display = "none";
+            teamGrid.style.justifyContent = "center";
+            teamGrid.style.width = "100%";
+            return;
+        }
+
+        if (teamPrevBtn) teamPrevBtn.style.display = "flex";
+        if (teamNextBtn) teamNextBtn.style.display = "flex";
+        teamGrid.style.justifyContent = "flex-start";
+        teamGrid.style.width = "max-content";
+
+        const cardWidth = 320;
+        const gap = 32; // gap size (2rem = 32px)
+        const slideStep = cardWidth + gap;
+
+        teamNextBtn.onclick = () => {
+            const maxIndex = count - 3;
+            if (currentTeamIndex < maxIndex) {
+                currentTeamIndex++;
+                teamGrid.style.transform = `translateX(-${currentTeamIndex * slideStep}px)`;
+            }
+        };
+
+        teamPrevBtn.onclick = () => {
+            if (currentTeamIndex > 0) {
+                currentTeamIndex--;
+                teamGrid.style.transform = `translateX(-${currentTeamIndex * slideStep}px)`;
+            }
+        };
+    }
+
     // Run Initial Load
     loadFormCatalogs();
+    loadTeam(); // Load team stylists dynamically on load
     loadReviews(); // Load database testimonials on load
 });
