@@ -174,6 +174,30 @@
             </div></div>
         </section>
 
+        <!-- Transformations Section -->
+        <section id="transformations" class="transformations scroll-reveal" style="padding: 5rem 1rem;">
+            <div class="section-header" style="text-align: center; margin-bottom: 3.5rem;">
+                <span class="section-subtitle" style="color: var(--primary); font-size: 0.85rem; font-weight: 700; letter-spacing: 2px; text-transform: uppercase;">THE ART OF COIFFURE</span>
+                <h2 style="font-size: 2.5rem; margin-top: 0.5rem; margin-bottom: 1rem; font-family: var(--font-serif); font-weight: 400; letter-spacing: 1px; color: white;">Signature Transformations</h2>
+                <p style="color: #aaa; max-width: 600px; margin: 0 auto; line-height: 1.6; font-size: 0.95rem;">Drag the divider bar to view the high-fidelity before-and-after results of our color correction treatments.</p>
+            </div>
+            
+            <div class="comparison-slider-container inline-slider" style="max-width: 700px; margin: 0 auto; border-radius: 16px; overflow: hidden; border: 1px solid var(--border-glass); box-shadow: 0 15px 40px rgba(0,0,0,0.6), 0 0 20px rgba(168, 85, 247, 0.08);">
+                <div class="comparison-slider">
+                    <div class="before-image">
+                        <img src="assets/images/hair2.jpeg" alt="Before styling" loading="lazy">
+                        <span class="label-badge before">BEFORE</span>
+                    </div>
+                    <div class="after-image">
+                        <img src="assets/images/hair1.jpg" alt="After styling" loading="lazy">
+                        <span class="label-badge after">AFTER</span>
+                    </div>
+                    <input type="range" min="0" max="100" value="50" class="slider-range-divider" id="inline-slider-range" aria-label="Drag to view before and after">
+                    <div class="slider-handle-bar"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Booking Section -->
         <section id="booking" class="booking scroll-reveal">
             <div class="booking-container">
@@ -521,6 +545,15 @@
                 </form>
             </div>
         </div>
+
+        <!-- Scroll to Top Button -->
+        <button id="scroll-top-btn" aria-label="Scroll back to top" title="Scroll to Top">
+            <svg class="progress-circle" width="40" height="40" viewBox="0 0 40 40">
+                <circle cx="20" cy="20" r="18" fill="none" stroke="rgba(168, 85, 247, 0.15)" stroke-width="2"></circle>
+                <circle id="scroll-progress-bar" cx="20" cy="20" r="18" fill="none" stroke="var(--gold)" stroke-width="2" stroke-dasharray="113.1" stroke-dashoffset="113.1"></circle>
+            </svg>
+            <span class="arrow">↑</span>
+        </button>
 
         <script src="assets/js/main.js"></script>
 

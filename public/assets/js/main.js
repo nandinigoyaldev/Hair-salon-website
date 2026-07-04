@@ -651,13 +651,39 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    // Reusable Before/After Comparison Slider Binder
+    function bindComparisonSliders() {
+        const containers = document.querySelectorAll(".comparison-slider");
+        containers.forEach(container => {
+            const range = container.querySelector("input[type='range']");
+            const afterImg = container.querySelector(".after-image");
+            const handle = container.querySelector(".slider-handle-bar");
+            
+            if (range && afterImg && handle) {
+                const update = (val) => {
+                    afterImg.style.clipPath = `polygon(${val}% 0, 100% 0, 100% 100%, ${val}% 100%)`;
+                    handle.style.left = `${val}%`;
+                };
+                
+                // Initialize position
+                update(range.value);
+                
+                // Bind slider updates
+                range.addEventListener("input", (e) => {
+                    update(e.target.value);
+                });
+            }
+        });
+    }
+
+    // Initialize all comparison sliders (both inline and modal ones)
+    bindComparisonSliders();
+
     // Before/After comparison slider modal logic
     const portfolioModal = document.getElementById("portfolio-modal");
     const viewPortfolioBtns = document.querySelectorAll(".view-portfolio-btn");
     const closePortfolioModalSpan = document.querySelector(".close-portfolio-modal");
     const sliderDivider = document.getElementById("slider-divider-range");
-    const afterImageContainer = document.querySelector(".after-image");
-    const sliderHandleBar = document.querySelector(".slider-handle-bar");
     const sliderBeforeImg = document.getElementById("slider-before-img");
     const sliderAfterImg = document.getElementById("slider-after-img");
     const portfolioTitle = document.getElementById("portfolio-title");
@@ -666,13 +692,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const portfolios = {
         alice: {
             title: "Alice's Work: Premium Hair Nourishment",
-            before: "assets/images/hair3.jpeg", // hair treatment
-            after: "assets/images/hair1.jpg"   // stylish styling result
+            before: "assets/images/hair3.jpeg",
+            after: "assets/images/hair1.jpg"
         },
         michael: {
             title: "Michael's Work: Precision Color Highlights",
-            before: "assets/images/hair2.jpeg", // coloring coloring
-            after: "assets/images/hair1.jpg"   // completed styling
+            before: "assets/images/hair2.jpeg",
+            after: "assets/images/hair1.jpg"
         }
     };
 
@@ -690,25 +716,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     // Reset divider range position to 50%
                     if (sliderDivider) {
                         sliderDivider.value = 50;
-                        updateSliderPosition(50);
+                        sliderDivider.dispatchEvent(new Event('input'));
                     }
                     
                     portfolioModal.style.display = "block";
                 }
             });
-        });
-    }
-
-    function updateSliderPosition(value) {
-        if (afterImageContainer && sliderHandleBar) {
-            afterImageContainer.style.clipPath = `polygon(${value}% 0, 100% 0, 100% 100%, ${value}% 100%)`;
-            sliderHandleBar.style.left = `${value}%`;
-        }
-    }
-
-    if (sliderDivider) {
-        sliderDivider.addEventListener("input", (e) => {
-            updateSliderPosition(e.target.value);
         });
     }
 
@@ -902,6 +915,40 @@ document.addEventListener("DOMContentLoaded", () => {
                 
                 // Trigger appropriate bot workflow based on chips
                 handleUserMessage(label);
+            });
+        });
+    }
+
+    // ==========================================
+    // SCROLL TO TOP WIDGET LOGIC
+    // ==========================================
+    const scrollTopBtn = document.getElementById("scroll-top-btn");
+    const scrollProgressBar = document.getElementById("scroll-progress-bar");
+
+    if (scrollTopBtn && scrollProgressBar) {
+        window.addEventListener("scroll", () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            
+            if (docHeight > 0) {
+                const scrollPercent = scrollTop / docHeight;
+                // Circumference is 113.1
+                const offset = 113.1 - (scrollPercent * 113.1);
+                scrollProgressBar.style.strokeDashoffset = offset;
+                
+                // Toggle show class based on scroll threshold
+                if (scrollTop > 300) {
+                    scrollTopBtn.classList.add("show");
+                } else {
+                    scrollTopBtn.classList.remove("show");
+                }
+            }
+        });
+
+        scrollTopBtn.addEventListener("click", () => {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
             });
         });
     }
