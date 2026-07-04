@@ -6,11 +6,11 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
         <!-- SEO Metadata -->
-        <title>Creative Inc. - Premium Hair Styling & Care Services</title>
+        <title>Maison de Beauté - Premium Hair Styling & Care Services</title>
         <meta name="description"
-            content="Creative Inc. offers premium, editorial hair styling, coloring, and treatments for a flawless look. Book your luxury appointment today!">
+            content="Maison de Beauté offers premium, editorial hair styling, coloring, and treatments for a flawless look. Book your luxury appointment today!">
         <meta name="keywords" content="hair styling, hair coloring, hair treatment, salon, luxury hair care, balayage, organic hair care">
-        <meta name="author" content="Creative Inc.">
+        <meta name="author" content="Maison de Beauté">
 
         <!-- Typography & Fonts -->
         <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,8 +28,8 @@
             <nav>
                 <div class="nav-container">
                     <a href="#" class="nav-logo">
-                        <img src="assets/images/logo.png" alt="Creative Inc. Logo">
-                        <span>CREATIVE INC.</span>
+                        <img src="assets/images/logo.png" alt="Maison de Beauté Logo">
+                        <span>MAISON DE BEAUTÉ</span>
                     </a>
                     <button class="nav-toggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="primary-nav">
                         <span></span>
@@ -51,9 +51,19 @@
         <!-- Hero Section -->
         <section class="home">
             <div class="home-text">
-                <h1>Crafting Luxury Hair Experiences</h1>
-                <p>Award-winning styling, custom coloring, and transformative care tailored exclusively to your unique aesthetic.</p>
+                <p class="hero-brand-subtitle">MAISON DE BEAUTÉ</p>
+                <h1>Where Artistry Meets <span class="text-glow">Haute Coiffure</span></h1>
+                <p class="hero-intro">Award-winning styling, customized color curation, and nourishing treatments tailored exclusively to your unique aesthetic.</p>
                 <a href="#booking" class="hero-cta-btn">Book Your Appointment</a>
+            </div>
+            <div class="scroll-indicator">
+                <div class="mouse">
+                    <div class="wheel"></div>
+                </div>
+                <div class="arrow">
+                    <span></span>
+                    <span></span>
+                </div>
             </div>
         </section>
 
@@ -68,6 +78,7 @@
                 <div class="about-item">
                     <div class="about-image-wrapper">
                         <img src="assets/images/hair1.jpg" alt="Professional Hair Styling Service">
+                        <div class="shine-sweep"></div>
                     </div>
                     <div class="about-content">
                         <div class="about-title-row">
@@ -80,6 +91,7 @@
                 <div class="about-item">
                     <div class="about-image-wrapper">
                         <img src="assets/images/hair2.jpeg" alt="Expert Hair Coloring">
+                        <div class="shine-sweep"></div>
                     </div>
                     <div class="about-content">
                         <div class="about-title-row">
@@ -92,6 +104,7 @@
                 <div class="about-item">
                     <div class="about-image-wrapper">
                         <img src="assets/images/hair3.jpeg" alt="Hair Treatment for Healthy Hair">
+                        <div class="shine-sweep"></div>
                     </div>
                     <div class="about-content">
                         <div class="about-title-row">
@@ -111,33 +124,13 @@
                 <p class="section-subtitle">Read stories of style transformations from our beloved salon patrons.</p>
             </div>
             
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="rating">★★★★★</div>
-                    <blockquote>
-                        <p>"Creative Inc. is the absolute benchmark of luxury hair care. My hair feels incredibly strong, shiny, and perfectly styled. The attention to detail is unmatched."</p>
-                    </blockquote>
-                    <div class="client-info">
-                        <div class="client-avatar">SL</div>
-                        <div class="client-details">
-                            <strong>Sarah L.</strong>
-                            <span>Loyal Customer</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-card">
-                    <div class="rating">★★★★★</div>
-                    <blockquote>
-                        <p>"The color specialist Michael completely transformed my hair with a natural, gorgeous balayage. I've received countless compliments since my visit! Worth every cent."</p>
-                    </blockquote>
-                    <div class="client-info">
-                        <div class="client-avatar">JD</div>
-                        <div class="client-details">
-                            <strong>John D.</strong>
-                            <span>Loyal Customer</span>
-                        </div>
-                    </div>
-                </div>
+            <div class="testimonials-grid" id="testimonials-grid">
+                <!-- Loaded dynamically by Javascript -->
+            </div>
+
+            <div class="testimonials-actions" style="text-align: center; margin-top: 3.5rem; display: flex; justify-content: center; gap: 1.2rem; flex-wrap: wrap;">
+                <button type="button" class="write-review-btn" id="open-review-modal-btn">Write a Review</button>
+                <button type="button" class="write-review-btn" id="toggle-all-reviews-btn" style="display: none;">View All Reviews</button>
             </div>
         </section>
 
@@ -153,20 +146,32 @@
                     <div class="team-image-wrapper">
                         <img src="assets/images/stylist.jpeg" alt="Alice - Senior Hair Stylist">
                         <span class="specialist-badge">Senior Stylist</span>
+                        <div class="shine-sweep"></div>
                     </div>
                     <div class="team-details">
                         <h3>Alice</h3>
                         <p class="team-specialty">Precision Cuts & Texturizing</p>
+                        <div class="team-socials">
+                            <a href="#" class="team-social-btn" aria-label="Instagram">Instagram</a>
+                            <a href="#" class="team-social-btn" aria-label="Pinterest">Pinterest</a>
+                        </div>
+                        <button type="button" class="view-portfolio-btn" data-stylist="alice">View Transformations</button>
                     </div>
                 </div>
                 <div class="team-card">
                     <div class="team-image-wrapper">
                         <img src="assets/images/male.jpeg" alt="Michael - Expert Hair Colorist">
                         <span class="specialist-badge">Color Specialist</span>
+                        <div class="shine-sweep"></div>
                     </div>
                     <div class="team-details">
                         <h3>Michael</h3>
                         <p class="team-specialty">Highlights & Custom Balayage</p>
+                        <div class="team-socials">
+                            <a href="#" class="team-social-btn" aria-label="Instagram">Instagram</a>
+                            <a href="#" class="team-social-btn" aria-label="Pinterest">Pinterest</a>
+                        </div>
+                        <button type="button" class="view-portfolio-btn" data-stylist="michael">View Transformations</button>
                     </div>
                 </div>
             </div>
@@ -193,7 +198,7 @@
                     <div class="info-group">
                         <h3>CONTACT INQUIRIES</h3>
                         <p class="phone-number">+1 (555) 123-4567</p>
-                        <p class="email-address">concierge@creativeinc.com</p>
+                        <p class="email-address">concierge@maisondebeaute.com</p>
                     </div>
                 </div>
                 
@@ -202,30 +207,98 @@
                     <h2>Book Your Session</h2>
                     <p style="color: #aaa; margin-bottom: 2rem;">Secure a premium slot with our experts instantly.</p>
                     <form id="appointment-form">
-                        <input type="text" id="booking-name" name="name" placeholder="Your Full Name" required autocomplete="name">
-                        <input type="email" id="booking-email" name="email" placeholder="Your Email Address" required autocomplete="email">
-                        <input type="tel" id="booking-phone" name="phone" placeholder="Your Phone Number (e.g. 123-456-7890)" required autocomplete="tel">
-                        
-                        <select id="booking-service" name="service_id" required>
-                            <option value="" disabled selected>Select Service</option>
-                        </select>
-                        
-                        <select id="booking-stylist" name="stylist_id" required>
-                            <option value="" disabled selected>Select Stylist</option>
-                        </select>
-                        
-                        <input type="date" id="booking-date" name="date" required>
-                        
-                        <div id="time-slots-container" class="time-slots-container">
-                            <p class="time-slots-title">Available Time Slots</p>
-                            <div id="time-slots-grid" class="time-slots-grid">
-                                <span class="slots-placeholder">Please select a stylist and date first.</span>
+                        <!-- Step Indicator Progress Bar -->
+                        <div class="booking-steps-progress">
+                            <div class="step-indicator active" data-step="1">1<span>Services</span></div>
+                            <div class="step-indicator" data-step="2">2<span>Timing</span></div>
+                            <div class="step-indicator" data-step="3">3<span>Details</span></div>
+                        </div>
+
+                        <!-- Step 1: Services & Enhancements -->
+                        <div class="booking-step active" id="booking-step-1">
+                            <select id="booking-service" name="service_id" required>
+                                <option value="" disabled selected>Select Service</option>
+                            </select>
+
+                            <div class="addons-section">
+                                <p class="section-form-title">Enhance Your Session (Optional Add-ons)</p>
+                                <div class="addons-grid">
+                                    <label class="addon-card">
+                                        <input type="checkbox" name="addons" value="Spa Mask" data-price="25">
+                                        <span class="addon-name">Hydrating Spa Mask</span>
+                                        <span class="addon-price">+$25</span>
+                                    </label>
+                                    <label class="addon-card">
+                                        <input type="checkbox" name="addons" value="Shampoo" data-price="18">
+                                        <span class="addon-name">Color-Protect Shampoo</span>
+                                        <span class="addon-price">+$18</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="promo-section">
+                                <input type="text" id="booking-promo" placeholder="Promo Code (e.g. WELCOME10)">
+                                <button type="button" id="apply-promo-btn">Apply</button>
+                            </div>
+
+                            <div class="wizard-nav-btns">
+                                <button type="button" class="wizard-btn next-btn" id="step1-next-btn">Next Step</button>
                             </div>
                         </div>
-                        
-                        <input type="hidden" id="booking-time" name="time" required>
-                        
-                        <button type="submit" id="book-now-btn">Book Appointment</button>
+
+                        <!-- Step 2: Stylist, Date & Time Selection -->
+                        <div class="booking-step" id="booking-step-2">
+                            <select id="booking-stylist" name="stylist_id" required>
+                                <option value="" disabled selected>Select Stylist</option>
+                            </select>
+                            
+                            <input type="date" id="booking-date" name="date" required>
+                            
+                            <div id="time-slots-container" class="time-slots-container">
+                                <p class="time-slots-title">Available Time Slots</p>
+                                <div id="time-slots-grid" class="time-slots-grid">
+                                    <span class="slots-placeholder">Please select a stylist and date first.</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-nav-btns">
+                                <button type="button" class="wizard-btn back-btn" id="step2-back-btn">Back</button>
+                                <button type="button" class="wizard-btn next-btn" id="step2-next-btn">Next Step</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Contact details & invoice total preview -->
+                        <div class="booking-step" id="booking-step-3">
+                            <input type="text" id="booking-name" name="name" placeholder="Your Full Name" required autocomplete="name">
+                            <input type="email" id="booking-email" name="email" placeholder="Your Email Address" required autocomplete="email">
+                            <input type="tel" id="booking-phone" name="phone" placeholder="Your Phone Number (e.g. 123-456-7890)" required autocomplete="tel">
+
+                            <div class="price-summary-widget" id="price-summary" style="display: none;">
+                                <div class="summary-line">
+                                    <span>Base Service:</span>
+                                    <span id="summary-base">$0.00</span>
+                                </div>
+                                <div class="summary-line" id="summary-addons-row" style="display: none;">
+                                    <span>Add-ons:</span>
+                                    <span id="summary-addons">+$0.00</span>
+                                </div>
+                                <div class="summary-line" id="summary-discount-row" style="display: none;">
+                                    <span>Discount:</span>
+                                    <span id="summary-discount" style="color: var(--gold); font-weight: bold;">-$0.00</span>
+                                </div>
+                                <div class="summary-total-line">
+                                    <span>Total Price:</span>
+                                    <span id="summary-total">$0.00</span>
+                                </div>
+                            </div>
+
+                            <input type="hidden" id="booking-time" name="time" required>
+
+                            <div class="wizard-nav-btns">
+                                <button type="button" class="wizard-btn back-btn" id="step3-back-btn">Back</button>
+                                <button type="submit" class="wizard-btn submit-btn" id="book-now-btn">Book Appointment</button>
+                            </div>
+                        </div>
                     </form>
                 </div>
                 
@@ -272,12 +345,54 @@
 
         <!-- Booking Status Modal -->
         <div id="booking-modal" class="modal">
-            <div class="modal-content">
+            <div class="modal-content receipt-modal-content">
                 <span class="close-modal">&times;</span>
                 <div class="modal-body">
                     <div id="modal-icon">✓</div>
                     <h3 id="modal-title">Booking Successful!</h3>
-                    <p id="modal-message">Your appointment has been requested. We will confirm it shortly.</p>
+                    <p id="modal-message">Your appointment has been requested.</p>
+                    
+                    <!-- Itemized Invoice Receipt (Simulating confirmation email) -->
+                    <div class="receipt-invoice-card" id="receipt-invoice" style="display: none;">
+                        <div class="receipt-header">
+                            <h4>APPOINTMENT RECEIPT</h4>
+                            <span class="receipt-ref" id="receipt-ref-id">REF: MDB-7234</span>
+                        </div>
+                        <ul class="receipt-items-list">
+                            <li>
+                                <span id="receipt-service-name">Hair Styling</span>
+                                <span id="receipt-service-price">$50.00</span>
+                            </li>
+                            <li id="receipt-addons-row" style="display: none;">
+                                <span id="receipt-addons-names">Spa Mask</span>
+                                <span id="receipt-addons-price">+$25.00</span>
+                            </li>
+                            <li id="receipt-discount-row" style="display: none; color: var(--gold);">
+                                <span>Discount applied:</span>
+                                <span id="receipt-discount-price">-$5.00</span>
+                            </li>
+                            <li class="receipt-total-line">
+                                <span>Final Cost:</span>
+                                <span id="receipt-final-price">$70.00</span>
+                            </li>
+                        </ul>
+                        <div class="receipt-meta">
+                            <div><strong>Stylist:</strong> <span id="receipt-stylist-name">Alice</span></div>
+                            <div><strong>Date:</strong> <span id="receipt-date">July 10, 2026</span></div>
+                            <div><strong>Time:</strong> <span id="receipt-time">3:00 PM</span></div>
+                        </div>
+                        
+                        <!-- Check-in QR Code Simulator -->
+                        <div class="qr-code-wrapper">
+                            <div class="qr-code-placeholder">
+                                <svg width="90" height="90" viewBox="0 0 29 29" fill="black" style="background: white; padding: 6px; border-radius: 4px;">
+                                    <path d="M0 0h7v7H0zm22 0h7v7h-7zM0 22h7v7H0zm2 2h3v3H2zm20-22h3v3h-3zM2 2h3v3H2zm20 8h2v2h-2zm-3 2h3v2h-3zm3 3h2v2h-2zm-6-5h2v2h-2zm3 0h2v2h-2zm-6 3h2v2h-2zm3 2h2v2h-2zm-3 3h2v2h-2zm6 2h2v2h-2zm1 3h2v2h-2zm-4 2h2v2h-2zm-3 0h2v2h-2zm10-5h2v2h-2zm1 3h2v2h-2zm-3 2h3v3h-3zm-10-8h2v2h-2zm1-3h2v2h-2z" />
+                                </svg>
+                            </div>
+                            <span class="qr-instruction">Present QR code at check-in desk</span>
+                        </div>
+                    </div>
+                    
                     <button id="modal-close-btn" class="modal-btn">Close</button>
                 </div>
             </div>
@@ -287,7 +402,7 @@
         <footer>
             <div class="footer-container">
                 <div class="footer-column">
-                    <h3>CREATIVE INC.</h3>
+                    <h3>MAISON DE BEAUTÉ</h3>
                     <p>A luxury styling studio dedicated to creating personalized hair aesthetics that empower and inspire.</p>
                 </div>
                 <div class="footer-column">
@@ -317,9 +432,59 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2026 Creative Inc. | Expert Hair Styling & Care | All Rights Reserved.</p>
+                <p>&copy; 2026 Maison de Beauté | Expert Hair Styling & Care | All Rights Reserved.</p>
             </div>
         </footer>
+
+        <!-- Write a Review Modal -->
+        <div id="review-modal" class="modal">
+            <div class="modal-content review-modal-content">
+                <span class="close-review-modal">&times;</span>
+                <h2>Share Your Experience</h2>
+                <p style="color: #aaa; margin-bottom: 2rem;">We value your styling feedback.</p>
+                <form id="review-form">
+                    <input type="text" id="review-name" placeholder="Your Name" required autocomplete="name">
+                    
+                    <div class="rating-stars-input">
+                        <label>Your Rating:</label>
+                        <div class="stars-selectors">
+                            <input type="radio" id="star5" name="rating" value="5" required><label for="star5" title="5 stars">★</label>
+                            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars">★</label>
+                            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars">★</label>
+                            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars">★</label>
+                            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star">★</label>
+                        </div>
+                    </div>
+                    
+                    <textarea id="review-comment" placeholder="Write your review here..." rows="4" required></textarea>
+                    
+                    <button type="submit" id="submit-review-btn">Submit Review</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Before/After Portfolio Slider Modal -->
+        <div id="portfolio-modal" class="modal">
+            <div class="modal-content portfolio-modal-content">
+                <span class="close-portfolio-modal">&times;</span>
+                <h3 id="portfolio-title">Stylist Transformations</h3>
+                <p id="portfolio-desc" style="color: #aaa; margin-bottom: 1.5rem;">Drag the divider arrow to see the results.</p>
+                <div class="comparison-slider-container">
+                    <div class="comparison-slider">
+                        <div class="before-image">
+                            <img id="slider-before-img" src="assets/images/hair2.jpeg" alt="Hair styling before transformation">
+                            <span class="label-badge before">BEFORE</span>
+                        </div>
+                        <div class="after-image">
+                            <img id="slider-after-img" src="assets/images/hair1.jpg" alt="Hair styling after transformation">
+                            <span class="label-badge after">AFTER</span>
+                        </div>
+                        <input type="range" min="0" max="100" value="50" class="slider-range-divider" id="slider-divider-range" aria-label="Drag to view before and after">
+                        <div class="slider-handle-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <script src="assets/js/main.js"></script>
 

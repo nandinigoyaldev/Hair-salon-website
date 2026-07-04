@@ -355,11 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 renderBookings();
                 calculateMetrics();
             } else {
-                bookingsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ff5555;">Unauthorized access. Please log in again.</td></tr>';
+                bookingsTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: #ff5555;">Unauthorized access. Please log in again.</td></tr>';
             }
         } catch (err) {
             console.error("Error retrieving bookings:", err);
-            bookingsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #ff5555;">Server communications error.</td></tr>';
+            bookingsTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: #ff5555;">Server communications error.</td></tr>';
         }
     }
 
@@ -389,7 +389,8 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (filtered.length === 0) {
-            bookingsTableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: #888; font-style: italic; padding: 2rem;">No matching appointments found.</td></tr>';
+            bookingsTableBody.innerHTML = '<tr><td colspan="10" style="text-align: center; color: #888; font-style: italic; padding: 2rem;">No matching appointments found.</td></tr>';
+            calculateCommissions();
             return;
         }
 
@@ -412,7 +413,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 </td>
                 <td>
                     <div style="font-weight: 500;">${booking.service_name}</div>
-                    <div style="font-size: 0.8rem; color: var(--status-completed); font-weight: 600;">$${booking.service_price.toFixed(2)}</div>
+                    <div style="font-size: 0.8rem; color: #888;">$${booking.service_price.toFixed(2)}</div>
+                </td>
+                <td>
+                    <div style="font-size: 0.85rem; color: #ddd;">${booking.add_ons || 'None'}</div>
+                </td>
+                <td>
+                    <span style="font-size: 0.8rem; font-weight: 700; color: ${booking.promo_code ? 'var(--gold)' : '#888'};">${booking.promo_code || 'None'}</span>
+                </td>
+                <td>
+                    <div style="font-weight: 700; color: var(--status-completed);">$${booking.total_price.toFixed(2)}</div>
                 </td>
                 <td>
                     <div>${booking.stylist_name}</div>
@@ -449,6 +459,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
             bookingsTableBody.appendChild(tr);
         });
+
+        calculateCommissions();
+    }
+
+    // Calculate and render stylist commissions payouts (50% Split)
+    function calculateCommissions() {
+        const commissionsTableBody = document.getElementById("commissions-table-body");
+        if (!commissionsTableBody) return;
+        commissionsTableBody.innerHTML = "";
+
+        if (cachedStylists.length === 0) {
+            commissionsTableBody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #888; font-style: italic;">No stylists configured.</td></tr>';
+            return;
+        }
+
+        cachedStylists.forEach(stylist => {
+            // Find completed bookings for this stylist
+            const completedBookings = cachedBookings.filter(b => b.stylist_id === stylist.id && b.status === "completed");
+            
+            const completedCount = completedBookings.length;
+            const totalServiceSales = completedBookings.reduce((sum, b) => sum + Number(b.service_price), 0);
+            const commissionPayout = totalServiceSales * 0.50; // 50% split on base services
+
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td><div style="font-weight: bold; color: white;">${stylist.name}</div></td>
+                <td><div style="font-size: 0.85rem; color: #aaa;">${stylist.specialty}</div></td>
+                <td><div>${completedCount}</div></td>
+                <td><div style="font-weight: 600; color: var(--status-completed);">$${totalServiceSales.toFixed(2)}</div></td>
+                <td><div style="font-weight: 700; color: var(--gold); text-shadow: 0 0 5px rgba(252,211,77,0.2);">$${commissionPayout.toFixed(2)}</div></td>
+            `;
+            commissionsTableBody.appendChild(tr);
+        });
     }
 
     // Call update status endpoint
@@ -481,7 +524,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const data = await res.json();
 
             if (res.ok) {
-                showToast(`Booking for "${customerName}" was deleted.`);
+                showToast("Booking deleted successfully.");
                 await refreshBookings();
             } else {
                 showToast(data.error || "Failed to delete booking.", "error");
@@ -503,10 +546,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const total = cachedBookings.length;
         const pending = cachedBookings.filter(b => b.status === "pending").length;
         
-        // Calculate revenue only from COMPLETED appointments
+        // Calculate revenue only from COMPLETED appointments (using the final total_price)
         const revenue = cachedBookings
             .filter(b => b.status === "completed")
-            .reduce((sum, b) => sum + (b.service_price || 0), 0);
+            .reduce((sum, b) => sum + (b.total_price || 0), 0);
 
         if (metricTotal) metricTotal.textContent = total;
         if (metricPending) metricPending.textContent = pending;

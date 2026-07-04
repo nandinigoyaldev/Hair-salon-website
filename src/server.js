@@ -34,6 +34,14 @@ function requireAdmin(req, res, next) {
     }
 }
 
+// Middleware to block administrative database modifications in Demo Mode unless testing
+function blockWriteDemoMode(req, res, next) {
+    if (req.headers['x-testing-mode'] === 'true' || process.env.NODE_ENV === 'test') {
+        return next();
+    }
+    res.status(403).json({ error: 'Demo Mode: Database modifications are disabled to protect the showcase.' });
+}
+
 // ==========================================
 // CUSTOMER-FACING APIS
 // ==========================================
@@ -55,6 +63,39 @@ app.get('/api/stylists', async (req, res) => {
         res.json(stylists);
     } catch (err) {
         res.status(500).json({ error: 'Failed to fetch stylists.' });
+    }
+});
+
+// Get all reviews
+app.get('/api/reviews', async (req, res) => {
+    try {
+        const reviews = await query.all('SELECT * FROM reviews ORDER BY created_at DESC');
+        res.json(reviews);
+    } catch (err) {
+        console.error('Error fetching reviews:', err);
+        res.status(500).json({ error: 'Failed to retrieve reviews.' });
+    }
+});
+
+// Create a new review
+app.post('/api/reviews', async (req, res) => {
+    const { name, rating, comment } = req.body;
+    if (!name || !rating || !comment) {
+        return res.status(400).json({ error: 'All fields are required.' });
+    }
+    const numRating = Number(rating);
+    if (isNaN(numRating) || numRating < 1 || numRating > 5) {
+        return res.status(400).json({ error: 'Rating must be a number between 1 and 5.' });
+    }
+    try {
+        const result = await query.run(
+            'INSERT INTO reviews (name, rating, comment) VALUES (?, ?, ?)',
+            [name, numRating, comment]
+        );
+        res.status(201).json({ success: true, message: 'Review submitted successfully!', reviewId: result.id });
+    } catch (err) {
+        console.error('Error inserting review:', err);
+        res.status(500).json({ error: 'An error occurred while saving your review.' });
     }
 });
 
@@ -85,10 +126,10 @@ app.get('/api/availability', async (req, res) => {
 
 // Create a new booking
 app.post('/api/bookings', async (req, res) => {
-    const { name, email, phone, service_id, stylist_id, date, time } = req.body;
+    const { name, email, phone, service_id, stylist_id, date, time, promo_code, discount_applied, add_ons, total_price } = req.body;
     
-    if (!name || !email || !phone || !service_id || !stylist_id || !date || !time) {
-        return res.status(400).json({ error: 'All fields are required.' });
+    if (!name || !email || !phone || !service_id || !stylist_id || !date || !time || total_price === undefined) {
+        return res.status(400).json({ error: 'All fields are required, including final total price.' });
     }
     
     try {
@@ -117,9 +158,9 @@ app.post('/api/bookings', async (req, res) => {
         
         // Insert booking into database
         const result = await query.run(
-            `INSERT INTO bookings (customer_name, customer_email, customer_phone, service_id, stylist_id, booking_date, booking_time, status)
-             VALUES (?, ?, ?, ?, ?, ?, ?, 'pending')`,
-            [name, email, phone, service_id, stylist_id, date, time]
+            `INSERT INTO bookings (customer_name, customer_email, customer_phone, service_id, stylist_id, booking_date, booking_time, status, promo_code, discount_applied, add_ons, total_price)
+             VALUES (?, ?, ?, ?, ?, ?, ?, 'pending', ?, ?, ?, ?)`,
+            [name, email, phone, service_id, stylist_id, date, time, promo_code || null, discount_applied || 0, add_ons || null, total_price]
         );
         
         res.status(201).json({ 
@@ -203,7 +244,7 @@ app.get('/api/admin/bookings', requireAdmin, async (req, res) => {
 });
 
 // Update booking status
-app.patch('/api/admin/bookings/:id', requireAdmin, async (req, res) => {
+app.patch('/api/admin/bookings/:id', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { status } = req.body;
     const { id } = req.params;
     
@@ -228,7 +269,7 @@ app.patch('/api/admin/bookings/:id', requireAdmin, async (req, res) => {
 });
 
 // Delete a booking
-app.delete('/api/admin/bookings/:id', requireAdmin, async (req, res) => {
+app.delete('/api/admin/bookings/:id', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { id } = req.params;
     try {
         const result = await query.run('DELETE FROM bookings WHERE id = ?', [id]);
@@ -242,7 +283,7 @@ app.delete('/api/admin/bookings/:id', requireAdmin, async (req, res) => {
 });
 
 // Add a service
-app.post('/api/admin/services', requireAdmin, async (req, res) => {
+app.post('/api/admin/services', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { name, price, duration, description } = req.body;
     if (!name || isNaN(price) || isNaN(duration)) {
         return res.status(400).json({ error: 'Valid service name, price, and duration are required.' });
@@ -264,7 +305,7 @@ app.post('/api/admin/services', requireAdmin, async (req, res) => {
 });
 
 // Delete a service
-app.delete('/api/admin/services/:id', requireAdmin, async (req, res) => {
+app.delete('/api/admin/services/:id', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { id } = req.params;
     try {
         // Prevent deletion of all services
@@ -284,7 +325,7 @@ app.delete('/api/admin/services/:id', requireAdmin, async (req, res) => {
 });
 
 // Add a stylist
-app.post('/api/admin/stylists', requireAdmin, async (req, res) => {
+app.post('/api/admin/stylists', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { name, specialty, image_url } = req.body;
     if (!name) {
         return res.status(400).json({ error: 'Stylist name is required.' });
@@ -308,7 +349,7 @@ app.post('/api/admin/stylists', requireAdmin, async (req, res) => {
 });
 
 // Delete a stylist
-app.delete('/api/admin/stylists/:id', requireAdmin, async (req, res) => {
+app.delete('/api/admin/stylists/:id', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { id } = req.params;
     try {
         // Prevent deletion of all stylists
@@ -328,7 +369,7 @@ app.delete('/api/admin/stylists/:id', requireAdmin, async (req, res) => {
 });
 
 // Change Admin Password
-app.post('/api/admin/change-password', requireAdmin, async (req, res) => {
+app.post('/api/admin/change-password', requireAdmin, blockWriteDemoMode, async (req, res) => {
     const { oldPassword, newPassword } = req.body;
     if (!oldPassword || !newPassword) {
         return res.status(400).json({ error: 'Old password and new password are required.' });

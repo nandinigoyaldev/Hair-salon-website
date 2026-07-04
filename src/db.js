@@ -40,6 +40,14 @@ async function initDb() {
         // Enable foreign keys
         await query.run('PRAGMA foreign_keys = ON');
 
+        // Check if table needs upgrade (missing total_price column)
+        const tableInfo = await query.all("PRAGMA table_info(bookings)");
+        const hasTotalPrice = tableInfo.some(col => col.name === 'total_price');
+        if (tableInfo.length > 0 && !hasTotalPrice) {
+            console.log("Database: Upgrading bookings table schema...");
+            await query.run("DROP TABLE IF EXISTS bookings");
+        }
+
         // Create tables
         await query.run(`
             CREATE TABLE IF NOT EXISTS services (
@@ -71,6 +79,10 @@ async function initDb() {
                 booking_date TEXT NOT NULL, -- YYYY-MM-DD
                 booking_time TEXT NOT NULL, -- HH:MM
                 status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'confirmed', 'cancelled', 'completed')),
+                promo_code TEXT,
+                discount_applied REAL DEFAULT 0,
+                add_ons TEXT,
+                total_price REAL NOT NULL,
                 created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE,
                 FOREIGN KEY (stylist_id) REFERENCES stylists(id) ON DELETE CASCADE
@@ -82,6 +94,16 @@ async function initDb() {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 username TEXT UNIQUE NOT NULL,
                 password_hash TEXT NOT NULL
+            )
+        `);
+
+        await query.run(`
+            CREATE TABLE IF NOT EXISTS reviews (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                rating INTEGER NOT NULL,
+                comment TEXT NOT NULL,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
             )
         `);
 
@@ -116,6 +138,17 @@ async function initDb() {
             const hash = await bcrypt.hash(defaultPassword, salt);
             await query.run('INSERT INTO admins (username, password_hash) VALUES (?, ?)', ['admin', hash]);
             console.log('Database: Seeded default admin user (username: "admin", password: "Password123").');
+        }
+
+        // Seed Reviews if empty
+        const reviewsCount = await query.get('SELECT COUNT(*) as count FROM reviews');
+        if (reviewsCount.count === 0) {
+            await query.run(`
+                INSERT INTO reviews (name, rating, comment) VALUES
+                ('Sarah L.', 5, 'Maison de Beauté is the absolute benchmark of luxury hair care. My hair feels incredibly strong, shiny, and perfectly styled. The attention to detail is unmatched.'),
+                ('John D.', 5, 'The color specialist Michael completely transformed my hair with a natural, gorgeous balayage. I''ve received countless compliments since my visit! Worth every cent.')
+            `);
+            console.log('Database: Seeded default reviews.');
         }
         
         console.log('Database: Schema verification and seeding completed.');

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Login - Creative Inc. Salon</title>
+    <title>Admin Login - Maison de Beauté</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body {
@@ -114,8 +114,20 @@
 <body>
 
     <div class="login-card">
-        <h2>Creative Inc.</h2>
+        <h2>Maison de Beauté</h2>
         <p>Salon Administration Portal</p>
+        
+        <!-- Showcase Demo Credentials -->
+        <div style="background: rgba(252,211,77,0.08); border: 1px solid rgba(252, 211, 77, 0.25); padding: 1rem; border-radius: 10px; font-size: 0.85rem; color: #fcd34d; margin-bottom: 2rem; text-align: left; line-height: 1.5; backdrop-filter: blur(5px);">
+            <div style="font-weight: 700; margin-bottom: 0.4rem; display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 1rem;">✨</span> Showcase Demo Portal:
+            </div>
+            Username: <code style="background: rgba(0,0,0,0.4); padding: 2px 5px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; color: white; border: 1px solid rgba(255,255,255,0.1);">admin</code><br>
+            Password: <code style="background: rgba(0,0,0,0.4); padding: 2px 5px; border-radius: 4px; font-family: monospace; font-size: 0.9rem; color: white; border: 1px solid rgba(255,255,255,0.1);">Password123</code><br>
+            <div style="font-size: 0.75rem; opacity: 0.85; margin-top: 0.5rem; border-top: 1px solid rgba(252,211,77,0.15); padding-top: 0.4rem;">
+                Note: Administrative database edits are disabled in Demo Mode to protect the showcase.
+            </div>
+        </div>
         
         <form id="login-form">
             <div class="form-group">
@@ -124,7 +136,10 @@
             </div>
             
             <div class="form-group">
-                <label for="password">PASSWORD</label>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <label for="password" style="margin-bottom: 0;">PASSWORD</label>
+                    <button type="button" id="toggle-password-btn" style="background: none; border: none; color: #a855f7; font-size: 0.8rem; font-weight: 700; cursor: pointer; padding: 0; outline: none; transition: color 0.2s;">SHOW</button>
+                </div>
                 <input type="password" id="password" name="password" placeholder="Enter account password" required autocomplete="current-password">
             </div>
             
@@ -136,6 +151,21 @@
     </div>
 
     <script>
+        // Show/Hide Password Toggle Logic
+        const togglePasswordBtn = document.getElementById("toggle-password-btn");
+        const passwordInput = document.getElementById("password");
+        if (togglePasswordBtn && passwordInput) {
+            togglePasswordBtn.addEventListener("click", () => {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    togglePasswordBtn.textContent = "HIDE";
+                } else {
+                    passwordInput.type = "password";
+                    togglePasswordBtn.textContent = "SHOW";
+                }
+            });
+        }
+
         document.getElementById("login-form").addEventListener("submit", async (e) => {
             e.preventDefault();
             const username = document.getElementById("username").value.trim();

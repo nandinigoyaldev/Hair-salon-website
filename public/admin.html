@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard - Creative Inc. Salon</title>
+    <title>Admin Dashboard - Maison de Beauté</title>
     <link rel="stylesheet" href="assets/css/admin.css">
 </head>
 <body>
@@ -11,7 +11,7 @@
     <!-- Admin Header -->
     <header class="admin-header">
         <div class="brand">
-            <h1>Creative Inc.</h1>
+            <h1>Maison de Beauté</h1>
             <span>Salon Admin Panel</span>
         </div>
         <div class="user-nav">
@@ -91,6 +91,9 @@
                                 <th>Customer Info</th>
                                 <th>Contact</th>
                                 <th>Service Selected</th>
+                                <th>Add-ons</th>
+                                <th>Promo Code</th>
+                                <th>Total Price</th>
                                 <th>Stylist</th>
                                 <th>Schedule Date/Time</th>
                                 <th>Status</th>
@@ -100,7 +103,31 @@
                         <tbody id="bookings-table-body">
                             <!-- JS Dynamically Populates -->
                             <tr>
-                                <td colspan="7" style="text-align: center; color: #888; font-style: italic;">Loading appointments...</td>
+                                <td colspan="10" style="text-align: center; color: #888; font-style: italic;">Loading appointments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Stylist Commission Payouts Card -->
+            <div class="section-card" style="margin-top: 2rem;">
+                <h2>Stylist Commission Payouts (50% Split)</h2>
+                <p style="color: var(--text-sub); margin-bottom: 1.5rem;">Commission payout estimates calculated from completed sessions.</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Stylist Name</th>
+                                <th>Specialty</th>
+                                <th>Completed Bookings</th>
+                                <th>Total Services Sales</th>
+                                <th>Estimated Commission Payout</th>
+                            </tr>
+                        </thead>
+                        <tbody id="commissions-table-body">
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #888; font-style: italic;">Loading commissions report...</td>
                             </tr>
                         </tbody>
                     </table>
