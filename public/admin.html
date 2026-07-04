@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Creative Inc. Salon</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+</head>
+<body>
+
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="brand">
+            <h1>Creative Inc.</h1>
+            <span>Salon Admin Panel</span>
+        </div>
+        <div class="user-nav">
+            <span class="username" id="logged-admin-user">Logged in as admin</span>
+            <button id="admin-logout-btn" class="logout-btn">Log Out</button>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="dashboard-container">
+        
+        <!-- Metrics Panel -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <h3>Total Bookings</h3>
+                <div class="number" id="metric-total">0</div>
+                <div class="description">All reservation entries in system</div>
+            </div>
+            <div class="metric-card">
+                <h3>Pending Approvals</h3>
+                <div class="number" id="metric-pending" style="color: var(--status-pending);">0</div>
+                <div class="description">Requires confirmation review</div>
+            </div>
+            <div class="metric-card">
+                <h3>Total Revenue</h3>
+                <div class="number" id="metric-revenue" style="color: var(--status-completed);">$0.00</div>
+                <div class="description">From completed appointments</div>
+            </div>
+            <div class="metric-card">
+                <h3>Active Stylists</h3>
+                <div class="number" id="metric-stylists">0</div>
+                <div class="description">Available salon staff members</div>
+            </div>
+        </section>
+
+        <!-- Tab Controls -->
+        <nav class="tab-navigation">
+            <button class="tab-btn active" data-tab="bookings-tab">Bookings Manager</button>
+            <button class="tab-btn" data-tab="catalog-tab">Services & Stylists</button>
+            <button class="tab-btn" data-tab="settings-tab">Settings</button>
+        </nav>
+
+        <!-- TAB 1: Bookings Management -->
+        <section id="bookings-tab" class="tab-content active">
+            <div class="section-card">
+                <h2>Customer Appointments</h2>
+                
+                <!-- Filters Bar -->
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-date">Filter Date</label>
+                        <input type="date" id="filter-date">
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-stylist">Filter Stylist</label>
+                        <select id="filter-stylist">
+                            <option value="">All Stylists</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="filter-status">Filter Status</label>
+                        <select id="filter-status">
+                            <option value="">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="confirmed">Confirmed</option>
+                            <option value="completed">Completed</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Bookings Table -->
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Customer Info</th>
+                                <th>Contact</th>
+                                <th>Service Selected</th>
+                                <th>Stylist</th>
+                                <th>Schedule Date/Time</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bookings-table-body">
+                            <!-- JS Dynamically Populates -->
+                            <tr>
+                                <td colspan="7" style="text-align: center; color: #888; font-style: italic;">Loading appointments...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- TAB 2: Catalog Manager (Services & Stylists) -->
+        <section id="catalog-tab" class="tab-content">
+            <div class="admin-split-grid">
+                
+                <!-- Services Panel -->
+                <div class="section-card">
+                    <h2>Salon Services</h2>
+                    
+                    <!-- Add Service Form -->
+                    <form id="add-service-form" class="admin-form">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; color: var(--purple-accent);">Add New Service</h3>
+                        <div class="admin-form-group">
+                            <label for="service-name">Service Name *</label>
+                            <input type="text" id="service-name" placeholder="e.g. Balayage Dye" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="service-price">Price ($) *</label>
+                            <input type="number" id="service-price" step="0.01" min="0" placeholder="e.g. 150.00" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="service-duration">Duration (Minutes) *</label>
+                            <input type="number" id="service-duration" min="5" placeholder="e.g. 90" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="service-desc">Description</label>
+                            <textarea id="service-desc" rows="2" placeholder="Brief service info..."></textarea>
+                        </div>
+                        <button type="submit" class="admin-form-submit">Add Service</button>
+                    </form>
+
+                    <div class="catalog-list" id="services-list-container">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+                <!-- Stylists Panel -->
+                <div class="section-card">
+                    <h2>Stylist Staff</h2>
+                    
+                    <!-- Add Stylist Form -->
+                    <form id="add-stylist-form" class="admin-form">
+                        <h3 style="font-size: 1rem; margin-bottom: 1rem; text-transform: uppercase; color: var(--purple-accent);">Add New Stylist</h3>
+                        <div class="admin-form-group">
+                            <label for="stylist-name">Full Name *</label>
+                            <input type="text" id="stylist-name" placeholder="e.g. Sarah Jenkins" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="stylist-specialty">Specialty *</label>
+                            <input type="text" id="stylist-specialty" placeholder="e.g. Hair Extensions" required>
+                        </div>
+                        <div class="admin-form-group">
+                            <label for="stylist-image">Image Filename</label>
+                            <input type="text" id="stylist-image" placeholder="e.g. assets/images/stylist.jpeg" value="assets/images/logo.png">
+                        </div>
+                        <button type="submit" class="admin-form-submit">Add Stylist</button>
+                    </form>
+
+                    <div class="catalog-list" id="stylists-list-container">
+                        <!-- JS populated -->
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- TAB 3: Settings -->
+        <section id="settings-tab" class="tab-content">
+            <div class="section-card password-card">
+                <h2>Administrative Credentials</h2>
+                <p style="color: var(--text-sub); font-size: 0.9rem; margin-bottom: 1.5rem;">For security, change your admin dashboard passcode regularly.</p>
+                
+                <form id="change-password-form" class="admin-form">
+                    <div class="admin-form-group">
+                        <label for="old-password">Current Password</label>
+                        <input type="password" id="old-password" required autocomplete="current-password">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" required autocomplete="new-password">
+                    </div>
+                    <div class="admin-form-group">
+                        <label for="new-password-confirm">Confirm New Password</label>
+                        <input type="password" id="new-password-confirm" required autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="admin-form-submit">Update Password</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Toast Notification Container -->
+    <div id="toast" class="notification-toast">Action Completed</div>
+
+    <!-- Admin dashboard logic -->
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>
